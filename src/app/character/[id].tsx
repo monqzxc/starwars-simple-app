@@ -5,8 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DetailRow } from '@/components/DetailRow';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { FilmBars } from '@/components/FilmBars';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
-import { colors, spacing } from '@/constants/theme';
+import { Starfield } from '@/components/Starfield';
+import { colors, spacing, TOTAL_FILMS } from '@/constants/theme';
 import { useCharacterStore } from '@/store/character.store';
 import { formatMeasurement, formatText, isValidCharacterId } from '@/utils/character';
 
@@ -29,7 +31,7 @@ export default function CharacterDetailScreen() {
   }, [router]);
 
   const screenOptions = {
-    title: character?.name ?? '',
+    title: '',
     headerLeft: canGoBack
       ? undefined
       : () => (
@@ -39,92 +41,88 @@ export default function CharacterDetailScreen() {
         ),
   };
 
-  if (!validId) {
+  if (!validId || !character) {
     return (
-      <>
+      <View style={styles.container}>
         <Stack.Screen options={screenOptions} />
-        <ErrorMessage
-          title="Invalid character"
-          message="This character ID is not valid."
-          actionLabel="Back to characters"
-          onAction={goBack}
-        />
-      </>
-    );
-  }
-
-  if (!character) {
-    return (
-      <>
-        <Stack.Screen options={screenOptions} />
-        {isLoading ? (
+        <Starfield />
+        {validId && isLoading ? (
           <LoadingIndicator label="Loading character…" />
         ) : (
           <ErrorMessage
-            title="Character not found"
-            message="We couldn't find this character. Try refreshing the list."
+            title={validId ? 'Character not found' : 'Invalid character'}
+            message={validId ? 'Refresh the list and try again.' : 'This link has an invalid character ID.'}
             actionLabel="Back to characters"
             onAction={goBack}
           />
         )}
-      </>
+      </View>
     );
   }
 
   const filmCount = character.films.length;
 
   return (
-    <>
+    <View style={styles.container}>
       <Stack.Screen options={screenOptions} />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.lg }]}
-      >
-        <View style={styles.hero}>
-          <Text style={styles.name}>{character.name}</Text>
-          <Text style={styles.subtitle}>
-            {filmCount} {filmCount === 1 ? 'film appearance' : 'film appearances'}
+      <Starfield />
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.xl }]}>
+        <Text style={styles.name} accessibilityRole="header">
+          {character.name}
+        </Text>
+        <View style={styles.films}>
+          <FilmBars count={filmCount} size="large" />
+          <Text style={styles.filmsLabel}>
+            {filmCount} of {TOTAL_FILMS} films
           </Text>
         </View>
-        <DetailRow label="Height" value={formatMeasurement(character.height, 'cm')} />
-        <DetailRow label="Mass" value={formatMeasurement(character.mass, 'kg')} />
-        <DetailRow label="Gender" value={formatText(character.gender)} />
-        <DetailRow label="Birth year" value={formatText(character.birth_year)} />
-        <DetailRow label="Hair color" value={formatText(character.hair_color)} />
-        <DetailRow label="Skin color" value={formatText(character.skin_color)} />
-        <DetailRow label="Eye color" value={formatText(character.eye_color)} />
-        <DetailRow label="Films" value={String(filmCount)} />
+        <View style={styles.stats}>
+          <DetailRow label="Height" value={formatMeasurement(character.height, 'cm')} />
+          <DetailRow label="Mass" value={formatMeasurement(character.mass, 'kg')} />
+          <DetailRow label="Gender" value={formatText(character.gender)} />
+          <DetailRow label="Birth year" value={formatText(character.birth_year)} />
+          <DetailRow label="Hair color" value={formatText(character.hair_color)} />
+          <DetailRow label="Skin color" value={formatText(character.skin_color)} />
+          <DetailRow label="Eye color" value={formatText(character.eye_color)} />
+        </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.space,
   },
   content: {
-    paddingHorizontal: spacing.md,
-  },
-  hero: {
+    paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.accent,
   },
   name: {
-    color: colors.text,
-    fontSize: 30,
-    fontWeight: '700',
+    color: colors.crawl,
+    fontSize: 38,
+    lineHeight: 42,
+    fontWeight: '800',
+    letterSpacing: -0.5,
   },
-  subtitle: {
+  films: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  filmsLabel: {
     color: colors.textMuted,
     fontSize: 14,
-    marginTop: spacing.xs,
+  },
+  stats: {
+    marginTop: spacing.xl,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
   },
   headerBack: {
-    color: colors.accent,
+    color: colors.crawl,
     fontSize: 17,
   },
 });

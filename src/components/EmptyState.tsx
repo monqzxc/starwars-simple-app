@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   title: {
-    color: colors.text,
+    color: colors.star,
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',

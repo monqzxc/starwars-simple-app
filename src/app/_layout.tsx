@@ -16,11 +16,11 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: colors.background },
-          headerTintColor: colors.accent,
-          headerTitleStyle: { color: colors.text, fontWeight: '700' },
+          headerStyle: { backgroundColor: colors.space },
+          headerTintColor: colors.crawl,
+          headerTitleStyle: { color: colors.star, fontWeight: '700' },
           headerShadowVisible: false,
-          contentStyle: { backgroundColor: colors.background },
+          contentStyle: { backgroundColor: colors.space },
         }}
       >
         <Stack.Screen name="index" options={{ title: 'Star Wars Characters' }} />

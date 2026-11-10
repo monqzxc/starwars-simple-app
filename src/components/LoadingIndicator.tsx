@@ -9,7 +9,7 @@ interface LoadingIndicatorProps {
 export function LoadingIndicator({ label = 'Loading…' }: LoadingIndicatorProps) {
   return (
     <View style={styles.container} accessibilityRole="progressbar" accessibilityLabel={label}>
-      <ActivityIndicator size="large" color={colors.accent} />
+      <ActivityIndicator size="large" color={colors.crawl} />
       <Text style={styles.label}>{label}</Text>
     </View>
   );

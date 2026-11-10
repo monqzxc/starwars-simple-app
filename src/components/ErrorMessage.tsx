@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   title: {
-    color: colors.text,
+    color: colors.star,
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
@@ -58,13 +58,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.accent,
+    borderColor: colors.crawl,
   },
   buttonPressed: {
     backgroundColor: colors.surface,
   },
   buttonLabel: {
-    color: colors.accent,
+    color: colors.crawl,
     fontSize: 15,
     fontWeight: '600',
   },

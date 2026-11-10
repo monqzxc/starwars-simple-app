@@ -1,14 +1,12 @@
 export const colors = {
-  background: '#0B0D12',
-  surface: '#151922',
-  border: '#232836',
-  text: '#ECEEF3',
-  textMuted: '#8A91A3',
-  accent: '#FFE81F',
-  danger: '#FF6B6B',
-  male: '#5AA9FF',
-  female: '#FF7AB6',
-  neutral: '#9AA3B5',
+  space: '#000000',
+  surface: '#0D0F14',
+  border: '#1C1F27',
+  star: '#EDEBE4',
+  textMuted: '#8B8F9A',
+  crawl: '#FFE81F',
+  unlit: '#2A2D35',
+  danger: '#FF5C5C',
 } as const;
 
 export const spacing = {
@@ -18,3 +16,5 @@ export const spacing = {
   lg: 24,
   xl: 32,
 } as const;
+
+export const TOTAL_FILMS = 6;

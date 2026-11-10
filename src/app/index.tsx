@@ -8,6 +8,7 @@ import { CHARACTER_CARD_HEIGHT, CharacterCard } from '@/components/CharacterCard
 import { EmptyState } from '@/components/EmptyState';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { Starfield } from '@/components/Starfield';
 import { StatusBanner } from '@/components/StatusBanner';
 import { colors } from '@/constants/theme';
 import { useCharacterStore } from '@/store/character.store';
@@ -73,6 +74,7 @@ export default function CharacterListScreen() {
 
   return (
     <View style={styles.container}>
+      <Starfield />
       {hasCharacters && error ? <StatusBanner message={bannerMessage} onDismiss={clearError} /> : null}
       <FlatList
         data={characters}
@@ -88,8 +90,8 @@ export default function CharacterListScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refreshCharacters}
-            tintColor={colors.accent}
-            colors={[colors.accent]}
+            tintColor={colors.crawl}
+            colors={[colors.crawl]}
             progressBackgroundColor={colors.surface}
           />
         }
@@ -105,7 +107,7 @@ export default function CharacterListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.space,
   },
   emptyContent: {
     flexGrow: 1,

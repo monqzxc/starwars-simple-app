@@ -30,9 +30,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   value: {
-    color: colors.text,
+    color: colors.star,
     fontSize: 15,
     fontWeight: '500',
+    fontVariant: ['tabular-nums'],
     flexShrink: 1,
     textAlign: 'right',
     marginLeft: spacing.md,
