@@ -55,12 +55,3 @@ export function formatMeasurement(value: string, unit: string): string {
   const numeric = value.replace(/,/g, '');
   return /^\d+(\.\d+)?$/.test(numeric) ? `${value} ${unit}` : formatText(value);
 }
-
-export function formatTimestamp(timestamp: number): string {
-  return new Date(timestamp).toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}

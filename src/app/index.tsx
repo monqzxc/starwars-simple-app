@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { FlatList, type ListRenderItem, RefreshControl, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,13 +7,14 @@ import { useShallow } from 'zustand/react/shallow';
 import { CHARACTER_CARD_HEIGHT, CharacterCard } from '@/components/CharacterCard';
 import { EmptyState } from '@/components/EmptyState';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { FetchButton } from '@/components/FetchButton';
+import { FetchingPill } from '@/components/FetchingPill';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { Starfield } from '@/components/Starfield';
-import { StatusBanner } from '@/components/StatusBanner';
+import { Toast } from '@/components/Toast';
 import { colors } from '@/constants/theme';
 import { useCharacterStore } from '@/store/character.store';
 import type { Character } from '@/types/character.types';
-import { formatTimestamp } from '@/utils/character';
 
 const keyExtractor = (item: Character) => item.id;
 
@@ -26,18 +27,16 @@ const getItemLayout = (_: ArrayLike<Character> | null | undefined, index: number
 export default function CharacterListScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { characters, loading, refreshing, error, isOffline, lastFetched, hasLoadedCache } =
-    useCharacterStore(
-      useShallow((state) => ({
-        characters: state.characters,
-        loading: state.loading,
-        refreshing: state.refreshing,
-        error: state.error,
-        isOffline: state.isOffline,
-        lastFetched: state.lastFetched,
-        hasLoadedCache: state.hasLoadedCache,
-      })),
-    );
+  const { characters, loading, refreshing, error, isOffline, hasLoadedCache } = useCharacterStore(
+    useShallow((state) => ({
+      characters: state.characters,
+      loading: state.loading,
+      refreshing: state.refreshing,
+      error: state.error,
+      isOffline: state.isOffline,
+      hasLoadedCache: state.hasLoadedCache,
+    })),
+  );
   const fetchCharacters = useCharacterStore((state) => state.fetchCharacters);
   const refreshCharacters = useCharacterStore((state) => state.refreshCharacters);
   const clearError = useCharacterStore((state) => state.clearError);
@@ -53,13 +52,10 @@ export default function CharacterListScreen() {
   );
 
   const hasCharacters = characters.length > 0;
-  const savedAt = lastFetched ? ` from ${formatTimestamp(lastFetched)}` : '';
-  const bannerMessage = isOffline
-    ? `You're offline. Showing saved characters${savedAt}.`
-    : `Couldn't refresh. Showing saved characters${savedAt}.`;
+  const isBusy = loading || refreshing;
 
   const renderEmpty = () => {
-    if (!hasLoadedCache || loading) return <LoadingIndicator label="Loading characters…" />;
+    if (!hasLoadedCache || loading) return <LoadingIndicator label="Fetching data…" />;
     if (error) {
       return (
         <ErrorMessage
@@ -69,13 +65,15 @@ export default function CharacterListScreen() {
         />
       );
     }
-    return <EmptyState title="No characters found" message="Pull down to refresh." />;
+    return <EmptyState title="No characters found" message="Tap Fetch data to try again." />;
   };
 
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{ headerRight: () => <FetchButton disabled={isBusy} onPress={fetchCharacters} /> }}
+      />
       <Starfield />
-      {hasCharacters && error ? <StatusBanner message={bannerMessage} onDismiss={clearError} /> : null}
       <FlatList
         data={characters}
         keyExtractor={keyExtractor}
@@ -100,6 +98,8 @@ export default function CharacterListScreen() {
         windowSize={7}
         removeClippedSubviews
       />
+      {hasCharacters && loading ? <FetchingPill /> : null}
+      <Toast title="Fetch failed" message={hasCharacters ? error : null} onHide={clearError} />
     </View>
   );
 }
